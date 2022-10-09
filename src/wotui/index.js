@@ -1,6 +1,6 @@
-import { Lazyload, ImgPreview, Loading, InfiniteLoad,Popup } from 'wot-design'
+import { Lazyload, ImgPreview, Loading, InfiniteLoad,Popup,Swipe, SwipeItem } from 'wot-design'
 
-const UIComponents = [Lazyload, ImgPreview, Loading, InfiniteLoad,Popup]
+const UIComponents = [Lazyload, ImgPreview, Loading, InfiniteLoad,Popup,Swipe, SwipeItem]
 
 
 const WotUIPlugin = {};
