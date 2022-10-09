@@ -15,14 +15,7 @@ const routes = [
     name: 'content',
     props:true,
     component: () => import("../views/ContentView.vue"),
-    // children:[
-    //  { 
-    //   path:'/comment',
-    //   name:'comment',
-    //   props:true,
-    //   component: () => import("../views/CommentView.vue"),
-    //   }
-    // ]
+    
   },
   {
     path: '/section',
@@ -34,7 +27,20 @@ const routes = [
     path: '/login',
     name: 'login',
     component: () => import("../views/LoginView.vue"),
+    children:[
+     
+    ]
   },
+  { 
+    path:'/registerLogin',
+    name:'registerLogin',
+    component: () => import("../views/RegisterLoginView.vue"),
+    },
+    { 
+      path:'/register',
+      name:'register',
+      component: () => import("../views/RegisterView.vue"),
+      }
 ]
 
 const router = new VueRouter({
