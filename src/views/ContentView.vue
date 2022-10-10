@@ -26,7 +26,7 @@
           <img src="../assets/img/4/ic_arrow_down_24dp.png" alt="" />
         </div>
 
-        <div @click="getComment(dataContent.id)">
+        <div @click="getLongComment(dataContent.id)">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="icon"
@@ -91,7 +91,7 @@
         </div>
       </div>
       <wd-popup v-model="commentsShow" position="bottom">
-        <CommentLive :comments="comments"></CommentLive>
+        <CommentLive :comments="comments" :longComments="longComments"></CommentLive>
       </wd-popup>
     </div>
   </div>
@@ -106,6 +106,7 @@ export default {
     dataContent: {},
     extra: {},
     comments: {},
+    longComments:{},
     commentsShow: false,
   }),
   components: {
@@ -142,8 +143,18 @@ export default {
       console.log(id);
       this.$router.push({ path: "/section", query: { id: id } });
     },
-    getComment(id) {
+    getLongComment(id) {
       console.log(id);
+      this.commentsShow = true;
+      this.$axios
+        .get(`https://apis.netstart.cn/zhihudaily/story/${id}/long-comments`)
+        .then(({ data }) => {
+          console.log(data);
+          this.longComments = data;
+        });
+        this.getComment(id)
+    },
+    getComment(id) {
       this.commentsShow = true;
       this.$axios
         .get(`https://apis.netstart.cn/zhihudaily/story/${id}/short-comments`)
@@ -151,7 +162,6 @@ export default {
           console.log(data);
           this.comments = data;
         });
-      // this.$router.push({path:'/content/comment',query:{id:id}})
     },
   },
 };
