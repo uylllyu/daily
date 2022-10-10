@@ -47,7 +47,11 @@
       <div class="comment-length" v-if="comments.comments.length">
         {{ comments.comments.length }} 条短评
       </div>
-      <div class="carousel-comments" v-for="c in comments.comments" :key="c.id">
+      <div
+        class="carousel-comments"
+        v-for="(c, index) in comments.comments"
+        :key="c.id"
+      >
         <div class="avatar"><img :src="c.avatar" /></div>
         <div class="comment-all">
           <div class="author">{{ c.author }}</div>
@@ -60,7 +64,7 @@
           </div>
           <div class="comment-bottom">
             <div class="time">{{ sendTime(c.time) }}</div>
-            <div class="likes">
+            <div class="likes" ref="heart" @click="choose(index)">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 class="icon"
@@ -80,38 +84,85 @@
         </div>
       </div>
     </div>
-    <div class="carousel-bottom"><div>显示全部评论</div></div>
-    <div class="carousel-sticky"><input type="text" /></div>
+    <div class="carousel-bottom"><div>已显示全部评论</div></div>
+    <div class="carousel-sticky">
+      <input type="text" v-model="inputText" />
+      <div class="send-comment" @click="sendComment()">
+        <img src="../assets/img/i/weibosdk_navigationbar_back.png" />
+      </div>
+    </div>
   </div>
 </template>
 <script>
 export default {
+  data: () => ({
+    inputText: "",
+    newComment: {
+      avatar:
+        "https://picx.zhimg.com/v2-1ae5f682bba916af97aaaddbf193a0f6_l.jpg?source=8673f162",
+      author: "游客10086",
+      content: "",
+      id: new Date().getTime() + "0",
+      time: parseInt(new Date().getTime() / 1000),
+      likes: 0,
+    },
+  }),
+
   props: {
     comments: Object,
     longComments: Object,
   },
   methods: {
     sendTime(times) {
-      let time = times + "000";
+      let time = parseInt(times + "000");
 
-      let nowTime = new Date().getTime();
-      console.log(time);
-      console.log(nowTime);
+      let nowTime = new Date();
+      let nowYear = nowTime.getFullYear();
+      let nowMonth = nowTime.getMonth();
+      let nowDate = nowTime.getDate();
 
-      let betweenDate = nowTime - parseInt(time);
-      console.log(betweenDate);
-      let sendDate = "";
-      if (parseInt(betweenDate / 86400000) == 0) {
-        sendDate = "今天";
+      let betweenDate = "";
+
+      let sendTime = new Date(time);
+      let sendYear = sendTime.getFullYear();
+      let sendMonth = sendTime.getMonth();
+      let sendDate = sendTime.getDate();
+
+      if (nowYear == sendYear) {
+        if (nowMonth != sendMonth || nowDate != sendDate) {
+          betweenDate = `${sendMonth + 1}-${sendDate}`;
+        } else {
+          betweenDate = `今天`;
+        }
       } else {
-        sendDate = parseInt(betweenDate / 86400000) + "天前";
+        betweenDate = `${sendYear}-${sendMonth + 1}-${sendDate}`;
       }
-      console.log(sendDate);
 
-      let sendTime = new Date(times);
       let sendHours = sendTime.getHours();
       let sendMin = sendTime.getMinutes();
-      return `${sendDate} ${sendHours}:${sendMin}`;
+
+      // console.log(betweenDate);
+
+      return `${betweenDate} ${sendHours < 10 ? "0" + sendHours : sendHours}:${
+        sendMin < 10 ? "0" + sendMin : sendMin
+      }`;
+    },
+    sendComment() {
+      this.newComment.content = this.inputText;
+      // console.log(this.newComment.content.length);
+      this.$emit("send-comment", this.newComment);
+      this.inputText = "";
+    },
+    choose(index) {
+      console.log(this.$refs.heart[index].lastChild, index);
+      if (this.$refs.heart[index].className == "likes") {
+        this.$refs.heart[index].className = "likes thumbs-up";
+        this.$refs.heart[index].lastChild.textContent=parseInt(this.$refs.heart[index].lastChild.textContent)+1
+      }else{
+        this.$refs.heart[index].className = "likes";
+        this.$refs.heart[index].lastChild.textContent=parseInt(this.$refs.heart[index].lastChild.textContent)-1
+      }
+      
     },
   },
 };
@@ -143,6 +194,7 @@ export default {
         font-size: 4vw;
         color: #000;
         line-height: 5.6vw;
+        word-break: break-all;
       }
       .reply {
         font-size: 4vw;
@@ -157,10 +209,21 @@ export default {
         font-size: 3.5vw;
         justify-content: space-between;
         align-items: center;
+        .time {
+          color: #999;
+        }
 
+        .likes {
+          color: #999;
+        }
         svg {
           width: 5vw;
           height: 5vw;
+        }
+        .thumbs-up {
+          path {
+            fill: red;
+          }
         }
       }
     }
@@ -181,6 +244,7 @@ export default {
     border-top: 1px #ccc solid;
   }
   .carousel-sticky {
+    padding: 1vw 0;
     position: sticky;
     bottom: 0;
     left: 0;
@@ -191,12 +255,23 @@ export default {
       width: 100%;
       height: 10vw;
       font-size: 6vw;
-      padding: 1vw 6vw;
+      padding: 1vw 13vw 1vw 6vw;
       outline: none;
       border: none;
       border-radius: 10vw;
       color: #999;
       background-color: rgb(231, 231, 231);
+    }
+
+    .send-comment {
+      position: absolute;
+      right: 1vw;
+      top: 50%;
+      transform: translateY(-50%) rotateY(180deg);
+      img {
+        width: 9vw;
+        height: 8vw;
+      }
     }
   }
 }
