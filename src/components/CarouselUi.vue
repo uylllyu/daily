@@ -1,79 +1,69 @@
 <template>
-    <div class="carousel-container">
-      <div class="carousel">
-        <div
-          class="carousel-content"
-          v-for="(topStory, i) in dataList.topStories"
-          :key="topStory.id"
-          @click="getDataList(topStory.id)"
-          v-show="currentIndex == i"
-        >
-          <img :src="topStory.image" />
-          <div>
-            <p class="title">{{ topStory.title }}</p>
-            <p class="hint">{{ topStory.hint }}</p>
-          </div>
+  <div class="carousel-container">
+    <wd-swipe height="90vw">
+      <wd-swipe-item
+        v-for="topStory in dataList.topStories"
+        class="carousel-content"
+        :key="topStory.id"
+      >
+        <img :src="topStory.image" @click="getDataList(topStory.id)" />
+        <div class="title-hint" @click="getDataList(topStory.id)">
+          <div class="title">{{ topStory.title }}</div>
+          <div class="hint">{{ topStory.hint }}</div>
         </div>
-        </div>
-      <div class="dots"></div>
-    </div>
+      </wd-swipe-item>
+    </wd-swipe>
+  </div>
 </template>
 <script>
-import number from 'lodash-es/number';
+import number from "lodash-es/number";
 
 export default {
   props: {
     dataList: Object,
-    currentIndex:number,
+    currentIndex: number,
   },
-  methods:{
-    getDataList(id){
-      this.$router.push({path:'/content',query:{id:id}})
-      // console.log(id);
-     
-    }
-  }
+  methods: {
+    getDataList(id) {
+      console.log(id);
+      this.$router.push({ path: "/content", query: { id: id } });
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
-  .carousel-container {
+.carousel-container {
+  width: 100vw;
+  height: 90vw;
+  .carousel-content {
     width: 100vw;
-    height: 90vw;
-    overflow: hidden;
-  
-    .carousel {
-      width: 500vw;
-      display: flex;
-    }
-  
-    .carousel-content {
+    position: relative;
+
+    img {
       width: 100vw;
-      position: relative;
-  
-      img {
-        width: 100vw;
-      }
-  
-      div {
-        box-sizing: border-box;
-        position: absolute;
-        bottom: 10vw;
-        width: 100vw;
-        background-color: rgba(0, 0, 0, 0.381);
-        padding: 3vw 4.5vw;
-      }
-  
-      .title {
-        font-size: 4.7vw;
-        color: #fff;
-        margin-bottom: 3.5vw;
-      }
-  
-      .hint {
-        font-size: 3vw;
-        color: #ccc;
-        margin-bottom: 4vw;
-      }
     }
+
+    .title-hint {
+      box-sizing: border-box;
+      position: absolute;
+      bottom: 0vw;
+      width: 100vw;
+      background-color: rgba(0, 0, 0, 0.381);
+      padding: 3vw 4.5vw;
+    }
+
+    .title {
+      font-size: 4.7vw;
+      color: #fff;
+      margin: 3.5vw 0;
+    }
+
+    .hint {
+      font-size: 3vw;
+      color: #ccc;
+      margin: 4vw 0;
+    }
+
   }
-  </style>>
+}
+</style>>
