@@ -177,7 +177,9 @@ export default {
     sendComment(newComment) {
       if (newComment.content.length <= 100) {
         // localStorage.setItem("newShortComment", JSON.stringify(newComment));
+        console.log(this.comments.comments);
         this.comments.comments = [...this.comments.comments, newComment];
+        console.log(this.comments.comments);
       } else {
         // localStorage.setItem("newLongComment", JSON.stringify(newComment));
         this.longComments.comments = [
@@ -251,6 +253,7 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    color: #999;
     background-color: #fff;
     width: 100vw;
     padding: 3vw 4vw;
@@ -275,6 +278,7 @@ export default {
       height: 7vw;
     }
     .thumbs-up{
+      color: red;
       path{
         fill: red;
       }
