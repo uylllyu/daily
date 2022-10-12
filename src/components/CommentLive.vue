@@ -74,7 +74,7 @@
           <div class="author">{{ c.author }}</div>
           <div class="comment-content">{{ c.content }}</div>
           <div class="reply" v-if="c.reply_to">
-            <div v-if="c.reply_to.author&&c.reply_to.status == '0'">
+            <div v-if="c.reply_to.author && c.reply_to.status == '0'">
               //{{ c.reply_to.author }}: {{ c.reply_to.content }}
             </div>
             <div v-if="c.reply_to.status == '1'">原评论以删除</div>
@@ -190,15 +190,17 @@ export default {
       }`;
     },
     sendComment() {
-      this.newComment.content = this.inputText;
-      console.log(this.newComment);
-      this.$emit("send-comment", this.newComment);
-      this.inputText = "";
-      this.reply_to();
-    },
-    reply_to() {
-      this.newComment.reply_to.content = "";
-      this.newComment.reply_to.author = "";
+      // this.newComment.content = this.inputText;
+      if (this.inputText.trim()) {
+        this.newComment = { ...this.newComment, content: this.inputText };
+        console.log(this.newComment);
+        this.$emit("send-comment", this.newComment);
+        this.inputText = "";
+        this.newComment = {
+        ...this.newComment,
+        reply_to: { content: "", author: "", status: 0 },
+      };
+      }
     },
     choose(index) {
       if (this.$refs.heart[index].className == "") {
@@ -223,9 +225,11 @@ export default {
       }
     },
     commentOther(authorOther, commentOther) {
-      // console.log(commentOther);
-      this.newComment.reply_to.content = commentOther;
-      this.newComment.reply_to.author = authorOther;
+      console.log(commentOther);
+      this.newComment = {
+        ...this.newComment,
+        reply_to: { content: commentOther, author: authorOther, status: 0 },
+      };
       console.log(this.newComment);
     },
   },
@@ -263,7 +267,7 @@ export default {
       }
       .reply {
         font-size: 4vw;
-        
+
         line-height: 5.6vw;
         color: #999;
       }

@@ -175,6 +175,7 @@ export default {
    
     },
     sendComment(newComment) {
+      console.log(newComment);
       if (newComment.content.length <= 100) {
         // localStorage.setItem("newShortComment", JSON.stringify(newComment));
         console.log(this.comments.comments);
